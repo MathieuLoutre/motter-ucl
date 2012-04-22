@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>M'Otter</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body 
+			{
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#zoom_plus
+			{
+				width: 80px;
+				opacity: 0.9;
+				z-index: 10001;
+				position: absolute;
+				top: 70px;
+				background: blue;
+				height: 50px;
+			}
+
+			#zoom_minus
+			{
+				width: 80px;
+				opacity: 0.9;
+				z-index: 10001;
+				position: absolute;
+				top: 140px;
+				background: red;
+				height: 50px;
+			}
+
+			.label
+			{
+				width: 35px;
+				height: 15px;
+				background: #8B0000;
+				color: yellow;
+				font-family: sans-serif;
+				font-size: 15px;
+				font-weight: bold;
+				position: absolute;
+				text-align: center;
+				z-index: 10001;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="Stats.js"></script>
+		<script src="Three.js"></script>
+		<script src="jquery-1.7.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Tween.js" type="text/javascript" charset="utf-8"></script>
+		<script src="AStar.js" type="text/javascript" charset="utf-8"></script>
+
+		<script>
+			var map_objects;
+			
+			$(document).ready(function()
+			{
+				// http://motter.heroku.com
+				// http://0.0.0.0:4567
+				$.getJSON('/get_data', function(data)
+				{
+					map_objects = data;
+					init();
+					animate();
+				});
+			});
+
+		</script>
+
+		<script src="motter.js" type="text/javascript" charset="utf-8"></script>
+
+	</body>
+</html>

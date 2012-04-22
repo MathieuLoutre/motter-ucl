@@ -1,0 +1,15 @@
+source 'http://rubygems.org'
+
+gem "nokogiri"
+gem "rack"
+gem "sinatra"
+gem "sinatra-contrib"
+gem "datamapper"
+gem "dm-sqlite-adapter"
+gem "thin"
+gem "sqlite3"
+gem "sqlite3-ruby"
+gem "json"
+gem "dm-postgres-adapter"
+gem "faster_haversine"
+gem "faraday"
