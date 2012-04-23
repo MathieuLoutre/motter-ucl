@@ -1,0 +1,31 @@
+As the software is a web application, a demo can be found here: \url{http://motter.heroku.com}
+
+It shows a part of the Bloomsbury area in London. It includes the work done on the bus network as well as the one done regarding the game integration. You are the blue cube in the middle of the screen at a beginning of a road represented as a white line. You can move around by clicking on the map, it will go to the node the closest to your click on the road using a path found with the A Star algorithm. You can use the blue button on the left to zoom (by default you are the maximum zoom) and the red button to unzoom.
+
+The buses are looping on the road given by OpenStreetMap whilst the green cubes representing zombies are roaming randomly. If you click on a green cube when there's no building between the blue cube and it, it will disappear/die.
+
+The code for the project is available on Github at https://github.com/MathieuLoutre/motter-ucl
+
+To retrieve the code you can either download a zip file using Github's ZIP button or, if you have Git installed, by pulling the code using this command:
+git pull git://github.com/MathieuLoutre/motter-ucl.git
+
+The next explanations assume you have the code on a UNIX machine and you are currently using a command line interface where you navigated to the folder where the code is saved.
+
+As this project uses a local server written Ruby and does some of the heavy lifting with it, it is required to install some libraries. First, check that you have Ruby 1.9.2p290 installed. It is the version the software has been tested on. It has worked on Ruby 1.9.3, but if you encounter any problem, please install the recommended version. Once you have checked your version of Ruby, check that you have the "Bundler" gem installed. If not, please install it using the following command:
+gem install bundler
+
+You can now install the necessary libraries using the following command:
+bundle install
+
+When the installation finishes, you can run the local server with this command:
+ruby ./motter.rb
+
+You can initialise the database with the provided OSM sample of the Bloomsbury area in London by going on http://0.0.0.0:4567/init/Bloomsbury-Small.osm
+
+After the page has displayed some text testifying it worked (it will be a JSON formatted list of the objects created), you can see the rendering at http://0.0.0.0:4567
+You will need the latest version of Google Chrome or Mozilla Firefox with WebGL enabled to make it work. Opera might also work but has not been tested.
+
+You can try the geolocated version at http://0.0.0.0:4567/geo. It will ask for your permission to use your current approximate location. By saying yes the server will fetch the corresponding data on an OSM server and store it in the database before rendering it. It might cause the server to timeout. In that case, it is recommended to check the server's activity and wait for the process to be completed. Once it is good, you will be able to access the result at http://0.0.0.0:4567
+Remember, the location is only approximate and therefore you might not find yourself where you might think you are.
+
+You can use any OSM file as an input for the renderer. Just place it in the folder and go to http://0.0.0.0:4567/init/Your-File-Name.osm

@@ -160,7 +160,7 @@ def findPosition(point_list, point)
 		up = crossProduct(toPrev.normalize, toNext.normalize)
 		base = crossProduct(up, bissect)
 
-		if Math.cos(toClick.inner_product(base)) > 0
+		if toClick.inner_product(base) > 0
 			return closest # insert right before!
 		else # Warning! Miss a case where product == 0 !!
 			return closest+1 # insert right after!
