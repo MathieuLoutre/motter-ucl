@@ -46,8 +46,10 @@ function init()
 	scene.add(roads);
 
 	// Initialise the limits to the first object on the map
-	var limits = {minX: map_objects[Object.keys(map_objects)[0]].minX, minY: map_objects[Object.keys(map_objects)[0]].minY,
-	 maxX: map_objects[Object.keys(map_objects)[0]].maxX, maxY: map_objects[Object.keys(map_objects)[0]].maxY};
+	var limits = {minX: map_objects[Object.keys(map_objects)[0]].minX, 
+		minY: map_objects[Object.keys(map_objects)[0]].minY,
+		maxX: map_objects[Object.keys(map_objects)[0]].maxX, 
+	 	maxY: map_objects[Object.keys(map_objects)[0]].maxY};
 
 	$.each(map_objects, function(index, value)
 	{	
@@ -75,9 +77,13 @@ function init()
 			});
 			
 			// Extrude the shape
-			var newBuilding3D = newBuildingShape.extrude({amount: value.height, bevelEnabled: false});
-			var mesh = new THREE.Mesh(newBuilding3D, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ));
-			mesh.rotation.x = 90 * (Math.PI / 180); // Rotate to have it flat
+			var newBuilding3D = newBuildingShape.extrude(
+				{amount: value.height, bevelEnabled: false});
+			var mesh = new THREE.Mesh(newBuilding3D, 
+					   		new THREE.MeshLambertMaterial(
+					      	{ color: Math.random() * 0xffffff }));
+			// Rotate to have it flat
+			mesh.rotation.x = 90 * (Math.PI / 180); 
 			// Y = height to be above the ground because of rotation
 			mesh.position.set(value.x, value.height, value.y);
 			buildings.add(mesh); // Add it to the scene
@@ -94,7 +100,8 @@ function init()
 			$.each(value.shape, function(index, node)
 			{
 				// Add a new vertex to the list of the road
-				road.vertices.push(new THREE.Vertex(new THREE.Vector3(node.x, 0, node.y)));
+				road.vertices.push(new THREE.Vertex(
+					new THREE.Vector3(node.x, 0, node.y)));
 				
 				// Structure of the graph for a reminder
 				//{a: {point: new Vector2(), links: {b, c}}}
@@ -105,8 +112,10 @@ function init()
 
 				if (!(node.id in map_tree)) // Doesn't exist
 				{
-					// If the node is not yet in the map, add it with its coordinates
-					map_tree[node.id] = {point: new THREE.Vector2(node.x + value.x, node.y + value.y), links: {}};
+					// If the node is not yet in the map, 
+					// add it with its coordinates
+					map_tree[node.id] = {point: new THREE.Vector2(node.x + 
+						value.x, node.y + value.y), links: {}};
 				}
 
 				// Depending on position, add with 1 or two links
@@ -138,7 +147,9 @@ function init()
 			});
 			
 			// Create a line and add it
-			var line = new THREE.Line(road, new THREE.LineBasicMaterial( { color: 0xffffff, opacity: 1.0, linewidth: 150.0 } ) );
+			var line = new THREE.Line(road, 
+					new THREE.LineBasicMaterial( 
+					{color: 0xffffff, opacity: 1.0, linewidth: 150.0 }));
 			line.position.set(value.x, 0, value.y);
 			roads.add(line);
 		}
@@ -148,9 +159,11 @@ function init()
 	for (var k = 0; k < 200; k++)
 	{
 		// Take a random node on the map
-		var key = Object.keys(map_tree)[Math.floor(Math.random() * Object.keys(map_tree).length)]
+		var key = Object.keys(map_tree)[getRandomKey(Math.floor(
+			Math.random() * Object.keys(map_tree).length))]
 		var geometry = new THREE.CubeGeometry( 4, 4, 4 );
-		var material = new THREE.MeshLambertMaterial( { color: 0x66CD00, shading: THREE.FlatShading, overdraw: true } );
+		var material = new THREE.MeshLambertMaterial(
+			{ color: 0x66CD00, shading: THREE.FlatShading, overdraw: true });
 		var cube = new THREE.Mesh( geometry, material );
 		// Set the position of the cube the random node
 		cube.position.set(map_tree[key].point.x, 4, map_tree[key].point.y);
@@ -163,7 +176,7 @@ function init()
 	// Create the ground
 	// TODO: Change size on the fly
 	var geometry = new THREE.PlaneGeometry(10000, 10000);
-	var planeMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff } );
+	var planeMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
 	THREE.ColorUtils.adjustHSV( planeMaterial.color, 0, 0, 0.9 );
 	planeMaterial.ambient = planeMaterial.color;
 	var ground = new THREE.Mesh( geometry, planeMaterial );
@@ -176,20 +189,25 @@ function init()
 
 	// Create the player
 	var geometry = new THREE.CubeGeometry( 5, 5, 5 );
-	var material = new THREE.MeshLambertMaterial( { color: 0x00ffee, shading: THREE.FlatShading, overdraw: true } );
-	var cube = new THREE.Mesh( geometry, material );
+	var material = new THREE.MeshLambertMaterial(
+		{ color: 0x00ffee, shading: THREE.FlatShading, overdraw: true });
+	var cube = new THREE.Mesh(geometry, material);
 
 	if (buses.length > 0)
 	{
 		// If there's buses on this part of the map
 		// Put him at the starting point of a bus
-		cube.position.set(map_tree[buses[0].shape[0].id].point.x, 5, map_tree[buses[0].shape[0].id].point.y);
+		cube.position.set(map_tree[buses[0].shape[0].id].point.x, 
+					   	  5, 
+						  map_tree[buses[0].shape[0].id].point.y);
 		player_position = buses[0].shape[0].id;
 	}
 	else
 	{
 		// Otherwise at first object
-		cube.position.set(map_tree[Object.keys(map_tree)[0]].point.x, 5, map_tree[Object.keys(map_tree)[0]].point.y);
+		cube.position.set(map_tree[Object.keys(map_tree)[0]].point.x, 
+						  5, 
+						  map_tree[Object.keys(map_tree)[0]].point.y);
 		player_position = Object.keys(map_tree)[0];
 	}
 
@@ -197,7 +215,8 @@ function init()
 	scene.add(cube);
 
 	// Create the camera
-	camera = new THREE.PerspectiveCamera( 35, window.innerWidth / window.innerHeight, 1, 1000 );
+	camera = new THREE.PerspectiveCamera(35, 
+		window.innerWidth / window.innerHeight, 1, 1000);
 	camera.position.x = map_tree[Object.keys(map_tree)[0]].point.x;
 	camera.position.y = 200;
 	camera.position.z = map_tree[Object.keys(map_tree)[0]].point.y + 60.0;
@@ -205,8 +224,8 @@ function init()
 	scene.add(camera);
 
 	// Lights
-	ambientLight = new THREE.AmbientLight( Math.random() * 0x10 );
-	scene.add( ambientLight );
+	ambientLight = new THREE.AmbientLight(Math.random() * 0x10);
+	scene.add(ambientLight);
 
 	directionalLight = new THREE.DirectionalLight(0xffffff);
 	directionalLight.position.x = map_objects[0].minX;
@@ -235,26 +254,28 @@ function init()
 	for (var k = 0; k < buses.length; k++)
 	{
 		var geometry = new THREE.CubeGeometry( 10, 10, 10 );
-		var material = new THREE.MeshLambertMaterial( { color: 0xff0000, shading: THREE.FlatShading, overdraw: true } );
-		var cube = new THREE.Mesh( geometry, material );
+		var material = new THREE.MeshLambertMaterial(
+			{ color: 0xff0000, shading: THREE.FlatShading, overdraw: true });
+		var cube = new THREE.Mesh(geometry, material);
 		cube.rotation.y = -30 * (Math.PI / 180);
 		cube.position.y = 4;
 
 		buses_object.add(cube);
-		$("#content").append('<div id="bus-'+cube.id+'" class="label">'+buses[k].type+'</div>');
+		$("#content").append('<div id="bus-' + cube.id + '" class="label">'+ 
+			buses[k].type+'</div>');
 		animateBus(cube, buses[k].shape, 75.0);
 	}
 
 	// Bind the events to the zoom and click function
 	$("canvas").on('click', onDocumentMouseDown);
-	$("#zoom_plus").on( 'click', click_zoom_plus );
-	$("#zoom_minus").on( 'click', click_zoom_minus );
+	$("#zoom_plus").on('click', click_zoom_plus);
+	$("#zoom_minus").on('click', click_zoom_minus);
 }
 
 // Will be called every frame
 function animate() 
 {
-	requestAnimationFrame( animate );
+	requestAnimationFrame(animate);
 	render();
 	stats.update();
 }
@@ -289,7 +310,8 @@ function findClosest(point_clicked)
 
 	for (key in map_tree)
 	{
-		if (point_clicked.distanceToSquared(map_tree[key].point) < point_clicked.distanceToSquared(map_tree[close_point].point))
+		if (point_clicked.distanceToSquared(map_tree[key].point) <
+		    point_clicked.distanceToSquared(map_tree[close_point].point))
 		{
 			close_point = key;
 		}
@@ -300,14 +322,20 @@ function findClosest(point_clicked)
 
 // Animates the player
 function animateObject(object, path, speed)
-{
-	// Will update the player position at every call
-	var update = function(){ object.position.x = current.x; object.position.z = current.z; }
+{	
 	var current = object.position.clone();
 	// Player is already at 0 so start at 1
 	var i = 1;
 
-	var nextPoint = function(){
+	// Will update the player position at every call
+	var update = function()
+	{ 
+	 	object.position.x = current.x; 
+		object.position.z = current.z;			 
+	}
+
+	var nextPoint = function()
+	{
 		i++;
 
 		// If there's still a node to got to
@@ -318,8 +346,9 @@ function animateObject(object, path, speed)
 			// there's no more nodes to go to
 			player_position = path[i];
 			player_animation = new TWEEN.Tween(current).to(
-				{x: map_tree[path[i]].point.x, z: map_tree[path[i]].point.y }, 
-				Math.sqrt(map_tree[path[i-1]].links[path[i]]) * speed).onUpdate(update).onComplete(nextPoint).start();
+			  {x: map_tree[path[i]].point.x, z: map_tree[path[i]].point.y }, 
+			  Math.sqrt(map_tree[path[i-1]].links[path[i]]) * 
+			  speed).onUpdate(update).onComplete(nextPoint).start();
 		}
 	}
 
@@ -328,34 +357,37 @@ function animateObject(object, path, speed)
 	// Animate to next node, will call nextPoint
 	player_animation = new TWEEN.Tween(current).to(
 		{x: map_tree[path[i]].point.x, z: map_tree[path[i]].point.y }, 
-		Math.sqrt(map_tree[path[i-1]].links[path[i]]) * speed).onUpdate(update).onComplete(nextPoint).start();
+		Math.sqrt(map_tree[path[i-1]].links[path[i]]) * 
+		speed).onUpdate(update).onComplete(nextPoint).start();
 }
 
 // Animates the buses
 // Uses same concept as player's animation
 function animateBus(object, path, speed)
 {
-	var update = function()
-		{ 
-			object.position.x = current.x; 
-			object.position.z = current.z;
-			var screenCoord = toScreenXY(object.position.clone());
-			// Move the label to the screen coordinates!
-			$("#bus-"+object.id).css("display", "block");
-			$("#bus-"+object.id).css("top", screenCoord.y-20+"px");
-			$("#bus-"+object.id).css("left", screenCoord.x-15+"px");
-		}
-
 	var current = object.position.clone();
 	var i = 1;
+
+	var update = function()
+	{ 
+		object.position.x = current.x; 
+		object.position.z = current.z;
+		var screenCoord = toScreenXY(object.position.clone());
+		// Move the label to the screen coordinates!
+		$("#bus-"+object.id).css("display", "block");
+		$("#bus-"+object.id).css("top", screenCoord.y-20+"px");
+		$("#bus-"+object.id).css("left", screenCoord.x-15+"px");
+	}
 
 	var nextPoint = function(){
 		i++;
 		if (i < path.length)
 		{
 			animation = new TWEEN.Tween(current).to(
-				{x: map_tree[path[i].id].point.x, z: map_tree[path[i].id].point.y }, 
-				Math.sqrt(map_tree[path[i-1].id].links[path[i].id]) * speed).onUpdate(update).onComplete(nextPoint).start();
+				{x: map_tree[path[i].id].point.x, 
+				z: map_tree[path[i].id].point.y }, 
+				Math.sqrt(map_tree[path[i-1].id].links[path[i].id]) * 
+				speed).onUpdate(update).onComplete(nextPoint).start();
 		}
 		else
 		{
@@ -371,7 +403,9 @@ function animateBus(object, path, speed)
 	// Add a delay to not have all the buses start at the same time
 	var animation = new TWEEN.Tween(current).to(
 		{x: map_tree[path[i].id].point.x, z: map_tree[path[i].id].point.y }, 
-		Math.sqrt(map_tree[path[i-1].id].links[path[i].id]) * speed).onUpdate(update).onComplete(nextPoint).delay((Math.random() * 5000) + (Math.random() * 8000)).start();
+		Math.sqrt(map_tree[path[i-1].id].links[path[i].id]) * 
+		speed).onUpdate(update).onComplete(nextPoint).delay(
+			(Math.random() * 5000) + (Math.random() * 8000)).start();
 }
 
 // Uses same concepts but instead of following
@@ -379,27 +413,38 @@ function animateBus(object, path, speed)
 // its accessible nodes
 function animateRandom(object, speed)
 {
-	var update = function(){ object.position.x = current.x; object.position.z = current.z; }
 	var current = object.position.clone();
+
+	var update = function()
+	{ 
+		object.position.x = current.x; 
+		object.position.z = current.z; 
+	}
 
 	var nextPoint = function()
 	{
-		var next = Object.keys(map_tree[monsters[object.id]].links)[Math.floor(Object.keys(map_tree[monsters[object.id]].links).length * Math.random())];
+		var next = Object.keys(map_tree[monsters[object.id]].links)[Math.floor(
+			Object.keys(map_tree[monsters[object.id]].links).length * 
+			Math.random())];
 		var current_node = monsters[object.id];
 		monsters[object.id] = next;
 
 		new TWEEN.Tween(current).to(
 			{x: map_tree[next].point.x, z: map_tree[next].point.y }, 
-			Math.sqrt(map_tree[current_node].links[next]) * speed).onUpdate(update).onComplete(nextPoint).start();
+			Math.sqrt(map_tree[current_node].links[next]) * 
+			speed).onUpdate(update).onComplete(nextPoint).start();
 	}
 
-	var next = Object.keys(map_tree[monsters[object.id]].links)[Math.floor(Object.keys(map_tree[monsters[object.id]].links).length * Math.random())];
+	var next = Object.keys(map_tree[monsters[object.id]].links)[Math.floor(
+		Object.keys(map_tree[monsters[object.id]].links).length * 
+		Math.random())];
 	var current_node = monsters[object.id];
 	monsters[object.id] = next;
 
 	new TWEEN.Tween(current).to(
 		{x: map_tree[next].point.x, z: map_tree[next].point.y }, 
-		Math.sqrt(map_tree[current_node].links[next]) * speed).onUpdate(update).onComplete(nextPoint).start();
+		Math.sqrt(map_tree[current_node].links[next]) * 
+		speed).onUpdate(update).onComplete(nextPoint).start();
 }
 
 // Move the camera up
@@ -432,22 +477,26 @@ function onDocumentMouseDown( event )
 	event.preventDefault();
 
 	// Create a ray for the vector
-	var vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
+	var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2-1, 
+		- (event.clientY / window.innerHeight) * 2 + 1, 0.5);
 	// Un project the screen coordinates to world coordinates
-	projector.unprojectVector( vector, camera );
-	var ray = new THREE.Ray( camera.position, vector.subSelf( camera.position ).normalize() );
+	projector.unprojectVector(vector, camera);
+	var ray = new THREE.Ray(camera.position, 
+		vector.subSelf(camera.position).normalize() );
 
 	// Two rays, one for the general scene and one specific for monsters
 	var intersects = ray.intersectObjects( scene.children );
-	var intersectsMonsters = ray.intersectObjects( scene.children[1].children );
+	var intersectsMonsters = ray.intersectObjects( scene.children[1].children);
 
 	// If a monster is hit from from screen coordinates
 	if (intersectsMonsters.length > 0)
 	{
 		// Shoot a ray from player's cube to check visibility
 		var rayMonster = new THREE.Ray(scene.children[4].position, 
-			intersectsMonsters[0].object.position.clone().subSelf( scene.children[4].position ).normalize());
-		var intersectsBuilding = rayMonster.intersectObjects(scene.children[0].children);
+			intersectsMonsters[0].object.position.clone().subSelf(
+				scene.children[4].position ).normalize());
+		var intersectsBuilding = rayMonster.intersectObjects(
+			scene.children[0].children);
 
 		// If no building is hit
 		if (intersectsBuilding.length == 0)
@@ -458,9 +507,11 @@ function onDocumentMouseDown( event )
 		else 
 		{
 			// If a building is hit, check who's hit first, monster or building
-			var realIntersectsMonsters = rayMonster.intersectObjects(scene.children[1].children);
+			var realIntersectsMonsters = rayMonster.intersectObjects(
+				scene.children[1].children);
 
-			if (intersectsBuilding[0].distance > realIntersectsMonsters[0].distance)
+			if (intersectsBuilding[0].distance > 
+				realIntersectsMonsters[0].distance)
 			{
 				// If it's the monster, kill it!
 				scene.__removeObject(intersectsMonsters[0].object);
@@ -472,7 +523,8 @@ function onDocumentMouseDown( event )
 		// If it hits the ground then it means the player wants to move
 		// Stop current animation and find a new path
 		player_animation.stop();
-		var closest = findClosest(new THREE.Vector2(intersects[0].point.x, intersects[0].point.z));
+		var closest = findClosest(new THREE.Vector2(intersects[0].point.x,
+		 	intersects[0].point.z));
 		var path = findPath(map_tree, player_position, closest);
 		path.push(closest);													
 
